@@ -20,7 +20,7 @@ configMapGenerator:
     behavior: merge
     literals:
       - OPTION_A=Thé (dev)
-      - OPTION_B=Chiens (dev)
+      - OPTION_B=Café (dev)
 
 patches:
   - target:
