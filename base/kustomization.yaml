@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - redis.yaml
+  - db.yaml
+  - vote.yaml
+  - result.yaml
+  - worker.yaml
+  - ingress.yaml
+
+configMapGenerator:
+  - name: vote-config
+    literals:
+      - OPTION_A=Cats
+      - OPTION_B=Dogs
+
+labels:
+  - includeSelectors: false
+    pairs:
+      app.kubernetes.io/part-of: voting-app

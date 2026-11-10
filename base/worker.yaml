@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app.kubernetes.io/name: worker
+    app.kubernetes.io/part-of: voting-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: worker
+        app.kubernetes.io/part-of: voting-app
+    spec:
+      containers:
+        - name: worker
+          image: dockersamples/examplevotingapp_worker
+          resources:
+            requests:
+              cpu: 50m
+              memory: 96Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          # Aucune readinessProbe ni livenessProbe.
+          # Le worker n'expose aucun port TCP/HTTP et ne fournit
+          # aucun endpoint de health-check.
+          # Pour ajouter une probe, il faudrait modifier
+          # l'application afin qu'elle expose par exemple
+          # une URL /healthz ou une commande de diagnostic
+          # permettant de vérifier la connexion à Redis
+          # et PostgreSQL.
+---
+# Aucun Service n'est nécessaire pour worker.
+# Ce composant n'expose pas d'API ni de port réseau.
+# Il agit comme un consommateur : il lit les votes dans Redis
+# et les enregistre dans PostgreSQL.
+# Aucun autre composant n'a besoin de se connecter à lui.
